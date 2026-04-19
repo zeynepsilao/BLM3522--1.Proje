@@ -3,35 +3,30 @@ from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
-CORS(app) # React'ten gelecek isteklere izin veriyoruz
+CORS(app)
 
-# --- AWS RDS Veritabanı Bağlantı Ayarları ---
+
 db_config = {
     "host": "sansur.us-east-2.rds.amazonaws.com",
     "user": "admin",
-    "password": "sifre" # AWS kurarken belirlediğin şifreyi buraya yaz
+    "password": "sifre"
 }
 
 def get_db_connection():
-    # Veritabanı oluşturulduktan sonra doğrudan 'personel_db'ye bağlanmak için
     try:
         return mysql.connector.connect(**db_config, database="personel_db")
     except mysql.connector.Error:
-        # Eğer henüz veritabanı yoksa sadece AWS sunucusuna bağlan (kurulum için)
         return mysql.connector.connect(**db_config)
 
-# --- Veritabanı ve Tablo Kurulum Rotası (SİHİRLİ ROTA) ---
-# Sunucuyu çalıştırdıktan sonra tarayıcıdan http://localhost:5000/init-db adresine SADECE BİR KERE gir.
+
 @app.route('/init-db', methods=['GET'])
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Veritabanını oluştur
     cursor.execute("CREATE DATABASE IF NOT EXISTS personel_db")
     cursor.execute("USE personel_db")
-    
-    # Tabloyu oluştur
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS personeller (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,25 +41,23 @@ def init_db():
     return jsonify({"mesaj": "AWS RDS uzerinde veritabani ve tablo basariyla olusturuldu!"})
 
 
-# --- API ROTALARI ---
 
-# Test Rotası
 @app.route('/', methods=['GET'])
 def baslangic():
     return jsonify({"mesaj": "Backend API basariyla AWS RDS'e baglandi!", "durum": "aktif"})
 
-# 1. Personelleri Listeleme
+
 @app.route('/personel', methods=['GET'])
 def get_personel():
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True) # Verileri React için JSON sözlük formatında çek
+    cursor = conn.cursor(dictionary=True) 
     cursor.execute("SELECT * FROM personeller")
     personeller = cursor.fetchall()
     cursor.close()
     conn.close()
     return jsonify(personeller)
 
-# 2. Personel Ekleme
+
 @app.route('/personel', methods=['POST'])
 def add_personel():
     yeni_personel = request.get_json()
@@ -79,14 +72,14 @@ def add_personel():
     cursor.execute(sql, val)
     conn.commit()
     
-    yeni_id = cursor.lastrowid # AWS'nin otomatik atadığı ID'yi al
+    yeni_id = cursor.lastrowid 
     cursor.close()
     conn.close()
 
     yeni_personel['id'] = yeni_id
     return jsonify({"mesaj": "Personel AWS veritabanına eklendi", "personel": yeni_personel}), 201
 
-# 3. Personel Silme
+
 @app.route('/personel/<int:id>', methods=['DELETE'])
 def delete_personel(id):
     conn = get_db_connection()
