@@ -6,11 +6,11 @@ Bu çalışma, modern bir web uygulamasının uçtan uca bulut mimarisi üzerind
 
 Projeyi incelemek isteyenler için sistem şu an aktif olarak AWS üzerinde çalışmaktadır:
 
-* **🌐 Ön Yüz (Uygulama Arayüzü):** [http://blm3522-proje1-frontend.s3-website.us-east-2.amazonaws.com/](http://blm3522-proje1-frontend.s3-website.us-east-2.amazonaws.com)
+* **Ön Yüz (Uygulama Arayüzü):** [http://blm3522-proje1-frontend.s3-website.us-east-2.amazonaws.com/](http://blm3522-proje1-frontend.s3-website.us-east-2.amazonaws.com)
 
 ---
 
-## 🏗️ Sistem Mimarisi
+## Sistem Mimarisi
 
 Sistem, birbiriyle asenkron haberleşen üç temel katmandan oluşmaktadır:
 
@@ -18,9 +18,14 @@ Sistem, birbiriyle asenkron haberleşen üç temel katmandan oluşmaktadır:
 2.  **Backend:** Python Flask framework'ü ile geliştirilen API. **AWS EC2 (Ubuntu)** sunucusu üzerinde `nohup` servisi ile 7/24 aktif tutulmaktadır.
 3.  **Veritabanı:** **AWS RDS (MySQL)** servisi kullanılarak veri kalıcılığı ve güvenliği sağlanmıştır.
 
-## 🛠️ Teknik Özellikler
+## Teknik Özellikler
 
 ### **Kullanılan Teknolojiler**
 * **Frontend:** React, CSS3, Fetch API, Vite.
 * **Backend:** Python 3, Flask, MySQL Connector.
 * **Cloud:** AWS (S3, EC2, RDS, Security Groups).
+
+---
+
+### **Video Link:**
+https://drive.google.com/drive/u/0/folders/1WNYOpuxZn-Ga60_xAiZYIOVon6rZ9hwY
